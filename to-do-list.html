@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primario': '#8b5cf6',       // Morado más vibrante
+                        'primario-claro': '#d9d8fd',
+                        'secundario': '#f97316',     // Naranja más vivo
+                        'secundario-claro': '#fde68a',
+                        'terciario': '#22c55e',       // Verde más intenso
+                        'terciario-claro': '#f0fdf4',
+                         'gris-claro': '#f3f4f6',    // Nuevo gris claro
+                        'gris-oscuro': '#6b7280',     // Nuevo gris oscuro
+                    },
+                    boxShadow: {
+                        'custom': '0px 4px 12px rgba(0, 0, 0, 0.15)', // Sombra más suave
+                    },
+                },
+            },
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+    // Reemplaza con la URL y la clave de tu proyecto Supabase
+    const supabaseUrl = 'https://gzbpqsvxpactkdhxjpau.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd6YnBxc3Z4cGFjdGtkaHhqcGF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ5NDIwNjksImV4cCI6MjA2MDUxODA2OX0.ZAUZqy2BRy1v86HC0EStXu3-10FFklYGr-2IR2LFvaU';
+    
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    </script>
+    <style>
+        /* Estilos adicionales para mejorar la apariencia */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-image: linear-gradient(to bottom right, #f3f4f6, #d1d5db); /* Reemplazado con variables de Tailwind */
+            min-height: 100vh;
+            width: 100vw; /* Añadido para cubrir el ancho completo */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 3rem; /* Reemplazado con variables de Tailwind */
+            font-family: 'Inter', sans-serif;
+            margin: 0; /* Reset default body margin */
+            overflow-x: hidden;  /* Prevent horizontal scrollbar */
+            position:absolute;
+        }
+        h1 {
+            font-size: 2.25rem; /* Reemplazado con variables de Tailwind */
+            font-weight: 600;  /* Reemplazado con variables de Tailwind */
+            color: #374151;    /* Reemplazado con variables de Tailwind */
+            margin-bottom: 2rem; /* Reemplazado con variables de Tailwind */
+            text-align: center;
+        }
+        .contenedor-tareas {
+            background-color: #fff;
+            border-radius: 0.75rem; /* Reemplazado con variables de Tailwind */
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15); /* Sombra más suave */
+            padding: 2rem;      /* Reemplazado con variables de Tailwind */
+            width: 100%;
+            max-width: 32rem;  /* Reemplazado con variables de Tailwind */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border: 1px solid #e5e7eb;  /* Reemplazado con variables de Tailwind */
+        }
+        .contenedor-tareas:hover {
+            transform: scale(1.03);
+            box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.1);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;    /* Reemplazado con variables de Tailwind */
+        }
+        @media (min-width: 640px) {
+            form {
+                flex-direction: row;
+            }
+        }
+        input[type="text"] {
+            flex-grow: 1;
+            border-radius: 0.75rem; /* Reemplazado con variables de Tailwind */
+            border: 1px solid #d1d5db;  /* Reemplazado con variables de Tailwind */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Reemplazado con variables de Tailwind */
+            padding: 1rem;      /* Reemplazado con variables de Tailwind */
+            background-color: #f3f4f6;  /* Reemplazado con variables de Tailwind */
+            color: #374151;    /* Reemplazado con variables de Tailwind */
+            font-family: 'Inter', sans-serif;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            ring-color: #8b5cf6;  /* Reemplazado con variables de Tailwind */
+            ring-width: 2px;
+            border-color: #8b5cf6;  /* Reemplazado con variables de Tailwind */
+        }
+        button[type="submit"] {
+            background-color: #8b5cf6;  /* Reemplazado con variables de Tailwind */
+            color: #fff;
+            border-radius: 0.75rem; /* Reemplazado con variables de Tailwind */
+            padding: 0.75rem 1.5rem;  /* Reemplazado con variables de Tailwind */
+            font-weight: 600;      /* Reemplazado con variables de Tailwind */
+            font-size: 1.125rem;  /* Reemplazado con variables de Tailwind */
+            transition: background-color 0.3s ease-in-out, transform 0.1s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reemplazado con variables de Tailwind */
+            font-family: 'Inter', sans-serif;
+            border: none;
+        }
+        button[type="submit"]:hover {
+            background-color: #d9d8fd;  /* Reemplazado con variables de Tailwind */
+            transform: scale(1.05);
+        }
+        #error {
+            color: #ef4444;  /* Reemplazado con variables de Tailwind */
+            font-size: 0.875rem;  /* Reemplazado con variables de Tailwind */
+            margin-top: 0.5rem;    /* Reemplazado con variables de Tailwind */
+            text-align: center;
+            display: none;
+        }
+        #taskList {
+            margin-top: 1.5rem;    /* Reemplazado con variables de Tailwind */
+            space-y: 1rem;      /* Reemplazado con variables de Tailwind */
+        }
+        .tarea-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #f3f4f6;  /* Reemplazado con variables de Tailwind */
+            padding: 1rem;      /* Reemplazado con variables de Tailwind */
+            border-radius: 0.75rem; /* Reemplazado con variables de Tailwind */
+             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); /* Slight shadow for each task */
+            border: 1px solid #e5e7eb;  /* Lighter border */
+        }
+        .tarea-completada {
+            text-decoration: line-through;
+            color: #a3a8b1; /* Gris más claro para tareas completadas */
+        }
+        .tarea-texto {
+            flex-grow: 1;
+            font-weight: 500;      /* Reemplazado con variables de Tailwind */
+            color: #374151;    /* Reemplazado con variables de Tailwind */
+            margin-right: 0.75rem; /* Reemplazado con variables de Tailwind */
+        }
+         .checkbox {
+            margin-right: 0.75rem; /* Add some margin to the right of the checkbox */
+            border-radius: 0.375rem;  /* Rounded corners for checkboxes */
+            border: 1px solid #d1d5db;  /* Style the checkbox border */
+            width: 1.25rem; /* Fixed width and height for the checkbox */
+            height: 1.25rem;
+            appearance: none; /* Remove default checkbox appearance */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer; /* Add a pointer cursor on hover */
+            position: relative; /* Allows for absolute positioning of the checkmark */
+        }
+
+        .checkbox:checked {
+            background-color: #8b5cf6; /* Change background color when checked */
+            border-color: #8b5cf6; /* Change border color when checked */
+        }
+
+       .checkbox:checked::before {
+            content: ''; /* Empty content, the checkmark is created with borders */
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            transform: translate(-50%, -50%) rotate(45deg); /* Rotate to create a checkmark */
+            width: 0.3rem;  /* Width of the checkmark line */
+            height: 0.6rem; /* Height of the checkmark line */
+            border: 0.15rem solid white; /* Style the checkmark */
+            border-top: none; /* Ensure only two sides are visible */
+            border-right: none;
+        }
+
+        .boton-eliminar {
+            background-color: #ef4444;  /* Reemplazado con variables de Tailwind */
+            color: #fff;
+            border-radius: 0.75rem; /* Reemplazado con variables de Tailwind */
+            padding: 0.5rem 1rem;      /* Reemplazado con variables de Tailwind */
+            transition: background-color 0.3s ease-in-out, transform 0.1s ease;
+            font-size: 0.875rem;  /* Reemplazado con variables de Tailwind */
+            font-weight: 600;
+            border: none;
+             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            font-family: 'Inter', sans-serif;
+        }
+        .boton-eliminar:hover {
+            background-color: #dc2626;  /* Reemplazado con variables de Tailwind */
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-100 to-gray-300 min-h-screen flex flex-col items-center justify-start pt-12 font-inter">
+    <div class="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md transition-transform hover:scale-105 border border-gray-200 shadow-custom contenedor-tareas">
+        <div class="mb-6">
+            <form id="taskForm" class="flex flex-col sm:flex-row gap-3 items-center">
+                <input
+                    type="text"
+                    id="taskInput"
+                    placeholder="Agregar nueva tarea..."
+                    class="flex-grow rounded-xl border-gray-300 shadow-sm focus:ring-primario focus:border-primario p-4 bg-gris-claro"
+                />
+                <button
+                    type="submit"
+                    class="bg-primario hover:bg-primario-claro text-white rounded-xl shadow-md py-3 px-6 transition-colors duration-300 font-semibold text-lg"
+                >
+                    Agregar
+                </button>
+            </form>
+            <div id="error" class="text-red-500 text-sm mt-2 text-center hidden">Por favor, introduce una tarea.</div>
+        </div>
+        <div id="taskList" class="space-y-4">
+            </div>
+    </div>
+    <script>
+        const taskForm = document.getElementById('taskForm');
+        const taskInput = document.getElementById('taskInput');
+        const taskList = document.getElementById('taskList');
+        const errorDiv = document.getElementById('error');
+
+        // Función para cargar las tareas desde el Local Storage
+        function loadTasks() {
+            let tasks = localStorage.getItem('tasks');
+            if (tasks) {
+                tasks = JSON.parse(tasks);
+                tasks.forEach(task => addTaskToList(task));
+            }
+        }
+
+        // Función para guardar las tareas en el Local Storage
+        function saveTasks(tasks) {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // Función para agregar una tarea a la lista y al Local Storage
+        function addTaskToList(taskText) {
+            const taskItem = document.createElement('div');
+            taskItem.className = "flex items-center justify-between bg-gris-claro p-4 rounded-xl shadow-md border border-gray-200 tarea-item";
+
+            const taskContent = document.createElement('span');
+            taskContent.textContent = taskText;
+            taskContent.className = "flex-grow font-medium text-gray-800 tarea-texto";
+
+             // Checkbox para marcar como completada
+            const checkbox = document.createElement('input');
+            checkbox.type = "checkbox";
+            checkbox.className = "mr-3 rounded-md text-primario focus:ring-primario h-5 w-5 checkbox";
+            checkbox.addEventListener('change', () => {
+                if (checkbox.checked) {
+                    taskContent.classList.add('tarea-completada');
+                } else {
+                    taskContent.classList.remove('tarea-completada');
+                }
+                 // No guardamos el estado de completado en el localStorage en este ejemplo,
+                 // pero podrías hacerlo si necesitas persistencia.
+            });
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = "Eliminar";
+            deleteButton.className = "bg-red-500 hover:bg-red-700 text-white rounded-xl shadow-md py-2 px-4 transition-colors duration-300 text-sm font-semibold boton-eliminar";
+            deleteButton.addEventListener('click', () => {
+                taskItem.remove();
+                let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+                tasks = tasks.filter(t => t !== taskText);
+                saveTasks(tasks);
+            });
+
+            taskItem.appendChild(checkbox); // Añadir el checkbox al inicio
+            taskItem.appendChild(taskContent);
+            taskItem.appendChild(deleteButton);
+            taskList.appendChild(taskItem);
+        }
+
+        // Evento para agregar una nueva tarea
+        taskForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const taskText = taskInput.value.trim();
+
+            if (taskText === '') {
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            errorDiv.classList.add('hidden');
+            addTaskToList(taskText);
+
+            let tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+            tasks.push(taskText);
+            saveTasks(tasks);
+
+            taskInput.value = '';
+        });
+
+        // Cargar las tareas al cargar la página
+        loadTasks();
+    </script>
+    <script>
+        async function guardarTarea(userId, textoTarea) {
+    const { data, error } = await supabase
+        .from('tareas') // Especifica la tabla 'tareas'
+        .insert([{ usuario_id: userId, texto: textoTarea }]); // Inserta un nuevo registro con el ID del usuario y el texto de la tarea
+
+    if (error) {
+        console.error('Error al guardar tarea:', error);
+    } else {
+        console.log('Tarea guardada:', data);
+        // Puedes agregar la tarea a la lista que se muestra en la página.
+    }
+}
+
+    </script>
+</body>
+</html>
