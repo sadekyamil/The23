@@ -13,36 +13,36 @@
         }
 
         body {
+            width: 100vw;
             height: 100vh;
-            width: 133.3vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #0e0e0f, #0a0b0b);
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             font-family: Arial, sans-serif;
             color: white;
         }
 
         .container {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 1vh;
-            width: 90%;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px;
+            width: 95%;
+            max-width: 1200px;
             text-align: center;
-            align-items: center;
-            justify-content: center;
         }
 
         .shortcut {
-            background: rgba(99, 96, 96, 0.1);
-            border-radius: 1vh;
-            padding: 1vh;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
             transition: transform 0.3s, background 0.3s;
-            font-size: 2.5vh;
+            font-size: 14px;
             font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
+            text-transform: uppercase;
         }
 
         .shortcut:hover {
@@ -56,52 +56,66 @@
             display: block;
         }
 
-        
+        footer {
+            position: absolute;
+            bottom: 10px;
+            font-size: 12px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Accesos directos -->
         <div class="shortcut"><a href="https://www.youtube.com" >YouTube</a></div>
         <div class="shortcut"><a href="https://music.youtube.com/" >music</a></div>
         <div class="shortcut"><a href="https://mail.google.com/mail/u/0/#inbox" >Gmail</a></div>
         <div class="shortcut"><a href="https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fsadekyamil%3Ftab%3Drepositories">GITHUB<br><span>login</span></a></div>
         <div class="shortcut"><a href="https://github.com/sadekyamil?tab=repositories">GitHub<br><span>/sadekyamil</span></a></div>
         <div class="shortcut"><a href="https://idx.google.com/pythonpy-86921935">firebase studio<br><span>mi1er-python</span></a></div>
-        
         <div class="shortcut"><a href="https://mail.proton.me/u/29/inbox">ProtonMail</a></div>
+        
+
         <div class="shortcut"><a href="https://dashboard.mailerlite.com/dashboard">....</a></div>
         <div class="shortcut"><a href="https://app.beehiiv.com/">....</a></div>
         <div class="shortcut"><a href="https://supabase.com/dashboard/projects">supabase</a></div>
         <div class="shortcut"><a href="https://dashboard.render.com/">render</a></div>
         <div class="shortcut"><a href="https://gemini.google.com/u/0/app">gemini</a></div>
-
         <div class="shortcut"><a href="https://idx.google.com/">.....</a></div>
         <div class="shortcut"><a href="https://html.onlineviewer.net/">html viewer</a></div>
+
         <div class="shortcut"><a href="https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fsadeknifuri%2Fladingpage">repositorio<br><span>landing page</span></a></div>   
         <div class="shortcut"><a href="https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fauth%2Fgithub_editor%3Fredirect%3D%252Fsadeknifuri%252Fladingpage%252Fblob%252Fmain%26requestId%3D2b72f962-15fb-44a4-a90b-4e7bdb7528c3">editar<br><span>landing page</span></a></div>  
         <div class="shortcut"><a href="https://ladingpage-6mq.pages.dev/">previsualizar<br><span>landing page</span></a></div>   
         <div class="shortcut"><a href="https://github.dev/sadekyamil/sadekyamil.github.io">editar<br><span>pagina-inicio</span></a></div>
-
         <div class="shortcut"><a href="https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fsadekyamil%2Fclase-innovacion ">innovacion</a></div>
         <div class="shortcut"><a href="https://dash.cloudflare.com/c1858a93e7246c885d0a6d4f73f2b7a3/workers-and-pages?type=pages&sortBy=name">cloudflare<br><span>pages</span></a></div>   
         <div class="shortcut"><a href="https://dash.cloudflare.com/c1858a93e7246c885d0a6d4f73f2b7a3/workers-and-pages/create/pages">cloudflare<br><span>news pages</span></a></div>   
+
+        
+
+        
+        
+        
         <div class="shortcut"><a href="https://experienciavivo.duoc.cl/alumnos" >vivoDUOC</a></div>
         <div class="shortcut"><a href="https://afiliados.amazon.es/help/node/topic/GRXPHT8U84RAYDXZ">AMAZON<br><span>Afiliados</span></a></div>
         <div class="shortcut"><a href="https://www.mercadolibre.cl/ayuda/27913">MercadoLIBRE<br><span>Afiliados</span></a></div>
-
         <div class="shortcut"><a href="https://imgto.xyz/">imgto.xyz</a></div>
         <div class="shortcut"><a href="https://www.photopea.com/">photopea</a></div>
         <div class="shortcut"><a href="https://sadeknifuri.github.io/temporizador.html">temporizador</a></div>
         <div class="shortcut"><a href="https://sadeknifuri.github.io/to-do-list.html">todo list</a></div>
+
         <div class="shortcut"><a href="https://vscode.dev/?vscode-lang=es-es">......</a></div>
         <div class="shortcut"><a href="https://es.finance.yahoo.com/">yahoo finance</a></div>
-
         <div class="shortcut"><a href="https://es.finance.yahoo.com/">stripe</a></div>
         <div class="shortcut"><a href="https://es.finance.yahoo.com/">mercado pago</a></div>
         <div class="shortcut"><a href="https://transferencias.global66.com/signin?redirect=%2Fhome">global66</a></div>
         <div class="shortcut"><a href="https://www.interactivebrokers.co.uk/sso/Login?RL=1&locale=en_US">IBKR</a></div>
         <div class="shortcut"><a href="https://platform.nexo.com/">nexo</a></div>
-        <div class="shortcut"><a href="https://platform.nexo.com/">nexo</a></div>
     </div>
+    <footer>
+        Página de inicio personalizada - Diseñada por ti.
+    </footer>
 </body>
 </html>
