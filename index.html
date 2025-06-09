@@ -154,7 +154,7 @@
                     </div>
                 </form>
 
-                <!-- NUEVO: Formulario de Búsqueda de Gemini -->
+                <!-- Formulario de Búsqueda de Gemini -->
                 <form id="gemini-search-form" class="search-form">
                     <h3>Búsqueda en Gemini</h3>
                     <div class="search-input-wrapper">
@@ -166,7 +166,7 @@
             
             <!-- Contenedor de Accesos Directos -->
             <div class="shortcuts-container" id="shortcuts">
-                <!-- Tus accesos directos aquí... (sin cambios) -->
+                <!-- Tus accesos directos aquí -->
                 <div class="shortcut"><a href="https://gemini.google.com/u/0/app">Gemini</a></div>
                 <div class="shortcut"><a href="https://aistudio.google.com/library">AI-studio</a></div>
                 <div class="shortcut"><a href="https://youtube.com" >YouTube</a></div>
@@ -230,6 +230,9 @@
         const userNameEl = document.getElementById('user-name');
         const userPhotoEl = document.getElementById('user-photo');
         
+        // CORRECCIÓN: Variable para guardar la info del usuario actual
+        let currentUser = null;
+        
         // --- Lógica de Autenticación ---
         googleSignInBtn.onclick = () => {
             signInWithPopup(auth, provider)
@@ -243,6 +246,7 @@
         };
 
         onAuthStateChanged(auth, (user) => {
+            currentUser = user; // Guardar el usuario actual en la variable
             if (user) {
                 authContainer.style.display = 'none';
                 userInfoContainer.style.display = 'flex';
@@ -257,21 +261,26 @@
             }
         });
 
-        // --- NUEVO: Lógica del formulario de Gemini ---
+        // --- Lógica del formulario de Gemini ---
         const geminiForm = document.getElementById('gemini-search-form');
         const geminiInput = document.getElementById('gemini-search-input');
 
         geminiForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Evita que el formulario se envíe de la forma tradicional
+            e.preventDefault(); 
             const query = geminiInput.value.trim();
-            if (query) {
-                // Codifica el texto para que sea seguro en una URL
+            // CORRECCIÓN: Asegurarse de que el usuario está logueado y hay un email disponible
+            if (query && currentUser && currentUser.email) {
                 const encodedQuery = encodeURIComponent(query);
-                // Construye la URL de Gemini y ábrela en una nueva pestaña
-                const geminiUrl = `https://gemini.google.com/app?prompt=${encodedQuery}`;
+                // CORRECCIÓN: Añadir el parámetro authuser para evitar el selector de cuentas
+                const geminiUrl = `https://gemini.google.com/app?prompt=${encodedQuery}&authuser=${currentUser.email}`;
                 window.open(geminiUrl, '_blank');
-                // Opcional: limpiar el campo de búsqueda después de enviar
                 geminiInput.value = '';
+            } else if (query) {
+                // Fallback por si no se encuentra el email (aunque es improbable)
+                 const encodedQuery = encodeURIComponent(query);
+                 const geminiUrl = `https://gemini.google.com/app?prompt=${encodedQuery}`;
+                 window.open(geminiUrl, '_blank');
+                 geminiInput.value = '';
             }
         });
     </script>
