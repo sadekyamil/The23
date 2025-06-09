@@ -30,123 +30,91 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            max-width: 1200px;
+            max-width: 1400px; /* Aumentado para dar espacio a la barra lateral */
             text-align: center;
         }
 
-        /* --- Estilos para la autenticación --- */
-        #auth-container {
-            display: flex; /* Se mostrará por defecto */
-            flex-direction: column;
-            align-items: center;
+        /* --- Estilos de Autenticación (sin cambios) --- */
+        #auth-container { display: flex; flex-direction: column; align-items: center; }
+        #google-signin-btn { background-color: #4285F4; color: white; border: none; border-radius: 8px; padding: 12px 24px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; display: flex; align-items: center; gap: 10px; }
+        #google-signin-btn:hover { background-color: #357ae8; }
+        #google-signin-btn svg { width: 20px; height: 20px; fill: white; }
+        #user-info { display: none; align-items: center; gap: 15px; margin-bottom: 25px; background: rgba(255, 255, 255, 0.1); padding: 10px 20px; border-radius: 50px; }
+        #user-info img { width: 40px; height: 40px; border-radius: 50%; }
+        #user-name { font-weight: bold; }
+        #signout-btn { background: #db4437; color: white; border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer; transition: background-color 0.3s; font-weight: bold; }
+        #signout-btn:hover { background: #c23327; }
+
+        /* --- NUEVO: Contenedor del Dashboard --- */
+        #dashboard {
+            display: none; /* Oculto hasta iniciar sesión */
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr; /* Una columna por defecto para móviles */
+            gap: 20px;
         }
 
-        #google-signin-btn {
-            background-color: #4285F4;
-            color: white;
-            border: none;
+        /* --- NUEVO: Estilos de la Barra de Búsqueda --- */
+        #search-sidebar {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #search-form h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #eee;
+            text-align: left;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 12px 15px 12px 40px; /* Espacio para el ícono */
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
-            padding: 12px 24px;
+            color: white;
             font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        #google-signin-btn:hover {
-            background-color: #357ae8;
         }
         
-        #google-signin-btn svg {
+        #search-input:focus {
+            outline: none;
+            border-color: #4285F4;
+        }
+
+        .search-input-wrapper svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
             width: 20px;
             height: 20px;
-            fill: white;
+            fill: #aaa;
         }
 
-        /* --- Estilos para la información del usuario y el botón de cierre de sesión --- */
-        #user-info {
-            display: none; /* Oculto por defecto */
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px 20px;
-            border-radius: 50px;
-        }
-
-        #user-info img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-
-        #user-name {
-            font-weight: bold;
-        }
-
-        #signout-btn {
-            background: #db4437;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            font-weight: bold;
-        }
-        
-        #signout-btn:hover {
-            background: #c23327;
-        }
-
-
-        /* --- Estilos para tus accesos directos --- */
+        /* --- Estilos de los Accesos Directos (sin cambios) --- */
         .shortcuts-container {
-            display: none; /* Oculto por defecto */
+            display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 15px;
             width: 100%;
         }
-
-        .shortcut {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            padding: 15px;
-            transition: transform 0.3s, background 0.3s;
-            font-size: 14px;
-            font-weight: bold;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            aspect-ratio: 1 / 0.8;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .shortcut:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: translateY(-5px);
-        }
-
-        .shortcut a {
-            text-decoration: none;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-        }
+        .shortcut { background: rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 15px; transition: transform 0.3s, background 0.3s; font-size: 14px; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; aspect-ratio: 1 / 0.8; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .shortcut:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-5px); }
+        .shortcut a { text-decoration: none; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
+        .shortcut span { font-size: 12px; font-weight: normal; color: #ccc; margin-top: 4px; }
         
-        .shortcut span {
-            font-size: 12px;
-            font-weight: normal;
-            color: #ccc;
-            margin-top: 4px;
+        /* --- NUEVO: Media Query para pantallas más grandes --- */
+        @media (min-width: 768px) {
+            #dashboard {
+                grid-template-columns: 280px 1fr; /* 2 columnas: barra lateral y contenido principal */
+            }
         }
 
     </style>
@@ -154,7 +122,7 @@
 <body>
 
     <div class="main-content">
-
+        <!-- Contenedor de Autenticación (sin cambios) -->
         <div id="auth-container">
             <h1 style="margin-bottom: 20px;">Mi Página de Inicio</h1>
             <button id="google-signin-btn">
@@ -163,137 +131,122 @@
             </button>
         </div>
 
+        <!-- Información del Usuario (sin cambios) -->
         <div id="user-info">
             <img id="user-photo" src="" alt="Foto de perfil">
             <span id="user-name"></span>
             <button id="signout-btn">Salir</button>
         </div>
 
-        <div class="shortcuts-container" id="shortcuts">
-             <div class="shortcut"><a href="https://gemini.google.com/u/0/app">Gemini</a></div>
-             <div class="shortcut"><a href="https://aistudio.google.com/library">AI-studio</a></div>
-             <div class="shortcut"><a href="https://youtube.com" >YouTube</a></div>
-             <div class="shortcut"><a href="https://music.youtube.com/playlist?list=LM" >YOUTUBE<br><span>music</span></a></div>
-             <div class="shortcut"><a href="https://drive.google.com/drive/recent">GOOGLE<br><span>drive</span></a></div>
-             <div class="shortcut"><a href="https://keep.google.com/">GOOGLE<br><span>keep</span></a></div>
-             <div class="shortcut"><a href="https://docs.google.com/presentation/u/0/">GOOGLE<br><span>diapositivas</span></a></div>
-
-             <div class="shortcut"><a href="https://us-east-2.console.aws.amazon.com/lambda/home?region=us-east-2#/discover">Lambda</a></div>
-             <div class="shortcut"><a href="https://us-east-2.console.aws.amazon.com/dynamodbv2/home?region=us-east-2#dashboard">DynamoDB</a></div>
-             <div class="shortcut"><a href="https://github.com/sadekyamil?tab=repositories">GITHUB<br><span>/sadekyamil</span></a></div>
-             <div class="shortcut"><a href="https://idx.google.com/pythonpy-86921935">FIREBASE-STUDIO<br><span>(mi-1er-python)</span></a></div>
-             <div class="shortcut"><a href="https://idx.google.com/">IDX Google</a></div>
-             <div class="shortcut"><a href="">.....</a></div>
-             <div class="shortcut"><a href="">-.-.-.-.<br><span>-.-.-.-.</span></a></div>
-
+        <!-- NUEVO: Dashboard que contiene la búsqueda y los accesos directos -->
+        <div id="dashboard">
+            <!-- Barra lateral de búsqueda -->
+            <div id="search-sidebar">
+                <form id="search-form" action="https://www.google.com/search" method="get" target="_blank">
+                    <h3>Búsqueda de Google</h3>
+                    <div class="search-input-wrapper">
+                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"></path></svg>
+                        <input type="text" name="q" id="search-input" placeholder="Buscar en Google..." required>
+                    </div>
+                </form>
+            </div>
             
-             <div class="shortcut"><a href="https://github.com/sadeknifuri/ladingpage">REPOSITORIO<br><span>BigoteMan</span></a></div>
-             <div class="shortcut"><a href="https://github.dev/sadeknifuri/ladingpage">EDITAR<br><span>BigoteMan</span></a></div>
-             <div class="shortcut"><a href="https://ladingpage-6mq.pages.dev/">Deploy<br><span>BigoteMan</span></a></div>
-             <div class="shortcut"><a href="https://github.dev/sadekyamil/sadekyamil.github.io">EDITAR<br><span>pagina-inicio</span></a></div>
-             <div class="shortcut"><a href="https://github.com/sadekyamil/clase-innovacion">REPOSITORIO<br><span>innovacion</span></a></div>
-             <div class="shortcut"><a href="https://dash.cloudflare.com/c1858a93e7246c885d0a6d4f73f2b7a3/workers-and-pages?type=pages&sortBy=name">CLOUDFLARE<br><span>pages</span></a></div>
-             <div class="shortcut"><a href="https://github.com/sadekyamil/sadekyamil.github.io/edit/main/index.html">EDITAR<br><span>sadekyamil.io</span></a></div>
-
-            
-             <div class="shortcut"><a href="https://imgto.xyz/">imgto.xyz</a></div>
-             <div class="shortcut"><a href="https://www.photopea.com/">Photopea</a></div>
-             <div class="shortcut"><a href="https://sadeknifuri.github.io/temporizador.html">Temporizador</a></div>
-             <div class="shortcut"><a href="https://chromewebstore.google.com/detail/adguard-adblocker/bgnkhhnnamicmpeenaelnjfhikgbkllg?hl=en-US&utm_source=ext_sidebar">AdGuard</a></div>
-             <div class="shortcut"><a href="https://experienciavivo.duoc.cl/alumnos" >vivoDUOC</a></div>
-             <div class="shortcut"><a href="">.....</a></div>
-             <div class="shortcut"><a href="">.....</a></div>
-
-             <div class="shortcut"><a href="https://es.finance.yahoo.com/">mercado pago</a></div>
-             <div class="shortcut"><a href="https://es.finance.yahoo.com/">stripe</a></div>
-             <div class="shortcut"><a href="https://transferencias.global66.com/signin?redirect=%2Fhome">global66</a></div>
-             <div class="shortcut"><a href="https://platform.nexo.com/">nexo</a></div>
-             <div class="shortcut"><a href="https://www.google.com/finance/?authuser=0">GOOGLE<br><span>finance</span></a></div>
-             <div class="shortcut"><a href="https://es.finance.yahoo.com/">YAHOO<br><span>finance</span></a></div>
-             <div class="shortcut"><a href="https://www.interactivebrokers.co.uk/sso/Login?RL=1&locale=en_US">IBKR</a></div>
+            <!-- Contenedor de Accesos Directos -->
+            <div class="shortcuts-container" id="shortcuts">
+                <div class="shortcut"><a href="https://gemini.google.com/u/0/app">Gemini</a></div>
+                <div class="shortcut"><a href="https://aistudio.google.com/library">AI-studio</a></div>
+                <div class="shortcut"><a href="https://youtube.com" >YouTube</a></div>
+                <div class="shortcut"><a href="https://music.youtube.com/playlist?list=LM" >YOUTUBE<br><span>music</span></a></div>
+                <div class="shortcut"><a href="https://drive.google.com/drive/recent">GOOGLE<br><span>drive</span></a></div>
+                <div class="shortcut"><a href="https://keep.google.com/">GOOGLE<br><span>keep</span></a></div>
+                <div class="shortcut"><a href="https://docs.google.com/presentation/u/0/">GOOGLE<br><span>diapositivas</span></a></div>
+                <div class="shortcut"><a href="https://us-east-2.console.aws.amazon.com/lambda/home?region=us-east-2#/discover">Lambda</a></div>
+                <div class="shortcut"><a href="https://us-east-2.console.aws.amazon.com/dynamodbv2/home?region=us-east-2#dashboard">DynamoDB</a></div>
+                <div class="shortcut"><a href="https://html.onlineviewer.net/">HTML Viewer</a></div>
+                <div class="shortcut"><a href="https://github.com/sadekyamil?tab=repositories">GITHUB<br><span>/sadekyamil</span></a></div>
+                <div class="shortcut"><a href="https://idx.google.com/pythonpy-86921935">FIREBASE-STUDIO<br><span>(mi-1er-python)</span></a></div>
+                <div class="shortcut"><a href="https://idx.google.com/">IDX Google</a></div>
+                <div class="shortcut"><a href="https://html.onlineviewer.net/">.....</a></div>
+                <div class="shortcut"><a href="https://github.com/sadeknifuri/ladingpage">REPOSITORIO<br><span>BigoteMan</span></a></div>
+                <div class="shortcut"><a href="https://github.dev/sadeknifuri/ladingpage">EDITAR<br><span>BigoteMan</span></a></div>
+                <div class="shortcut"><a href="https://ladingpage-6mq.pages.dev/">Deploy<br><span>BigoteMan</span></a></div>
+                <div class="shortcut"><a href="https://github.dev/sadekyamil/sadekyamil.github.io">EDITAR<br><span>pagina-inicio</span></a></div>
+                <div class="shortcut"><a href="https://github.com/sadekyamil/clase-innovacion">REPOSITORIO<br><span>innovacion</span></a></div>
+                <div class="shortcut"><a href="https://dash.cloudflare.com/c1858a93e7246c885d0a6d4f73f2b7a3/workers-and-pages?type=pages&sortBy=name">CLOUDFLARE<br><span>pages</span></a></div>
+                <div class="shortcut"><a href="https://github.com/sdekyamil/sadekyamil.github.io/edit/main/index.html">EDITAR<br><span>sadekyamil.io</span></a></div>
+                <div class="shortcut"><a href="https://imgto.xyz/">imgto.xyz</a></div>
+                <div class="shortcut"><a href="https://www.photopea.com/">Photopea</a></div>
+                <div class="shortcut"><a href="https://sadeknifuri.github.io/temporizador.html">Temporizador</a></div>
+                <div class="shortcut"><a href="https://chromewebstore.google.com/detail/adguard-adblocker/bgnkhhnnamicmpeenaelnjfhikgbkllg?hl=en-US&utm_source=ext_sidebar">AdGuard</a></div>
+                <div class="shortcut"><a href="https://experienciavivo.duoc.cl/alumnos" >vivoDUOC</a></div>
+                <div class="shortcut"><a href="https://es.finance.yahoo.com/">mercado pago</a></div>
+                <div class="shortcut"><a href="https://es.finance.yahoo.com/">stripe</a></div>
+                <div class="shortcut"><a href="https://transferencias.global66.com/signin?redirect=%2Fhome">global66</a></div>
+                <div class="shortcut"><a href="https://platform.nexo.com/">nexo</a></div>
+                <div class="shortcut"><a href="https://www.google.com/finance/?authuser=0">GOOGLE<br><span>finance</span></a></div>
+                <div class="shortcut"><a href="https://es.finance.yahoo.com/">YAHOO<br><span>finance</span></a></div>
+                <div class="shortcut"><a href="https://www.interactivebrokers.co.uk/sso/Login?RL=1&locale=en_US">IBKR</a></div>
+            </div>
         </div>
 
     </div>
 
+    <!-- SDK de Firebase -->
     <script type="module">
-        // Importa las funciones que necesitas de los SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
-
-        // Tu configuración de la app web de Firebase
+        
         const firebaseConfig = {
           apiKey: "AIzaSyAOyAQokAU7Lu9Qj6geDW2wE3mYFcPEWJA",
           authDomain: "mi-pagina-de-inicio.firebaseapp.com",
           projectId: "mi-pagina-de-inicio",
-          storageBucket: "mi-pagina-de-inicio.firebasestorage.app",
+          storageBucket: "mi-pagina-de-inicio.appspot.com",
           messagingSenderId: "101136936304",
           appId: "1:101136936304:web:8ac056ca460bb7fac533b5",
           measurementId: "G-5JWTP12ZMR"
         };
 
-        // Inicializa Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const analytics = getAnalytics(app); // Opcional, pero bueno tenerlo si Firebase lo proveyó
         const provider = new GoogleAuthProvider();
 
         // Referencias a los elementos del DOM
         const authContainer = document.getElementById('auth-container');
         const userInfoContainer = document.getElementById('user-info');
-        const shortcutsContainer = document.getElementById('shortcuts');
+        const dashboardContainer = document.getElementById('dashboard'); // ACTUALIZADO
         const googleSignInBtn = document.getElementById('google-signin-btn');
         const signOutBtn = document.getElementById('signout-btn');
         const userNameEl = document.getElementById('user-name');
         const userPhotoEl = document.getElementById('user-photo');
         
-        // --- Lógica de Autenticación ---
+        // --- Lógica de Autenticación (sin cambios, solo el elemento que se muestra/oculta) ---
 
-        // Función para iniciar sesión
         googleSignInBtn.onclick = () => {
             signInWithPopup(auth, provider)
-                .then((result) => {
-                    // El inicio de sesión fue exitoso.
-                    console.log("Usuario ha iniciado sesión:", result.user);
-                }).catch((error) => {
-                    // Manejo de errores.
-                    console.error("Error en el inicio de sesión con Google:", error);
-                    alert("Hubo un error al iniciar sesión. Por favor, intenta de nuevo.");
-                });
+                .then((result) => console.log("Usuario ha iniciado sesión:", result.user))
+                .catch((error) => console.error("Error en el inicio de sesión con Google:", error.code, error.message));
         };
         
-        // Función para cerrar sesión
         signOutBtn.onclick = () => {
-            signOut(auth).then(() => {
-                console.log("Usuario ha cerrado sesión.");
-            }).catch((error) => {
-                console.error("Error al cerrar sesión:", error);
-            });
+            signOut(auth).then(() => console.log("Usuario ha cerrado sesión."))
+                         .catch((error) => console.error("Error al cerrar sesión:", error));
         };
 
-        // Escucha los cambios en el estado de autenticación
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // El usuario ha iniciado sesión
-                // Ocultar el botón de login y mostrar el contenido
                 authContainer.style.display = 'none';
                 userInfoContainer.style.display = 'flex';
-                shortcutsContainer.style.display = 'grid';
+                dashboardContainer.style.display = 'grid'; // Muestra el dashboard completo
 
-                // Mostrar la información del usuario
                 userNameEl.textContent = user.displayName;
                 userPhotoEl.src = user.photoURL;
                 userPhotoEl.alt = user.displayName;
-
             } else {
-                // El usuario no ha iniciado sesión o ha cerrado sesión
-                // Mostrar el botón de login y ocultar el contenido
                 authContainer.style.display = 'flex';
                 userInfoContainer.style.display = 'none';
-                shortcutsContainer.style.display = 'none';
+                dashboardContainer.style.display = 'none'; // Oculta el dashboard completo
             }
         });
-
     </script>
 </body>
 </html>
