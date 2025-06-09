@@ -33,7 +33,7 @@
         .loader { width: 20px; height: 20px; border: 3px solid #4a4a4a; border-bottom-color: transparent; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite; }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* NUEVO: Estilos para el gestor de API Key */
+        /* Estilos para el gestor de API Key */
         #api-key-setup { display: none; /* Oculto por defecto */ padding: 10px; border: 1px dashed #444; border-radius: 8px; margin-top: 15px; }
         #api-key-setup p { font-size: 14px; margin-bottom: 10px; text-align: left; }
         #api-key-input { width: 100%; margin-bottom: 10px; }
@@ -225,7 +225,8 @@
             geminiInput.value = '';
 
             try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`;
+                // CORRECCIÓN: Usar el modelo gemini-1.5-flash-latest
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`;
                 const requestBody = { contents: [{ parts: [{ text: query }] }] };
                 const response = await fetch(url, {
                     method: 'POST',
