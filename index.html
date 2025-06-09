@@ -5,34 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página de Inicio</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            width: 100vw;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 100vw; min-height: 100vh; display: flex; align-items: center; justify-content: center;
             background: linear-gradient(135deg, #0e0e0e, #000000);
-            font-family: 'Inter', Arial, sans-serif;
-            color: white;
-            padding: 20px;
+            font-family: 'Inter', Arial, sans-serif; color: white; padding: 20px;
         }
-
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            max-width: 1400px;
-            text-align: center;
-        }
-
+        .main-content { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 1400px; text-align: center; }
         #auth-container { display: flex; flex-direction: column; align-items: center; }
         #google-signin-btn { background-color: #4285F4; color: white; border: none; border-radius: 8px; padding: 12px 24px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; display: flex; align-items: center; gap: 10px; }
         #google-signin-btn:hover { background-color: #357ae8; }
@@ -42,108 +21,32 @@
         #user-name { font-weight: bold; }
         #signout-btn { background: #db4437; color: white; border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer; transition: background-color 0.3s; font-weight: bold; }
         #signout-btn:hover { background: #c23327; }
-
-        #dashboard {
-            display: none;
-            width: 100%;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            align-items: start;
-        }
-
-        #search-sidebar {
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .search-form h3 {
-            margin-bottom: 15px;
-            font-size: 18px;
-            color: #eee;
-            text-align: left;
-        }
-
-        .search-input-wrapper {
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 15px 12px 40px;
-            background-color: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            color: white;
-            font-size: 16px;
-        }
+        #dashboard { display: none; width: 100%; display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
+        #search-sidebar { padding: 20px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; flex-direction: column; gap: 25px; }
+        .search-form h3 { margin-bottom: 15px; font-size: 18px; color: #eee; text-align: left; }
+        .search-input-wrapper { position: relative; }
+        .search-input { width: 100%; padding: 12px 15px 12px 40px; background-color: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; color: white; font-size: 16px; }
+        .search-input:focus { outline: none; border-color: #4285F4; }
+        .search-input-wrapper svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; fill: #aaa; }
         
-        .search-input:focus {
-            outline: none;
-            border-color: #4285F4;
-        }
+        #gemini-response-area { margin-top: 10px; text-align: left; background-color: rgba(0, 0, 0, 0.2); border-radius: 8px; padding: 15px; min-height: 50px; font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; }
+        .loader { width: 20px; height: 20px; border: 3px solid #4a4a4a; border-bottom-color: transparent; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite; }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .search-input-wrapper svg {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            fill: #aaa;
-        }
-        
-        #gemini-response-area {
-            margin-top: 10px;
-            text-align: left;
-            background-color: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            padding: 15px;
-            min-height: 50px;
-            font-size: 14px;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        
-        .loader {
-            width: 20px;
-            height: 20px;
-            border: 3px solid #4a4a4a;
-            border-bottom-color: transparent;
-            border-radius: 50%;
-            display: inline-block;
-            box-sizing: border-box;
-            animation: rotation 1s linear infinite;
-        }
+        /* NUEVO: Estilos para el gestor de API Key */
+        #api-key-setup { display: none; /* Oculto por defecto */ padding: 10px; border: 1px dashed #444; border-radius: 8px; margin-top: 15px; }
+        #api-key-setup p { font-size: 14px; margin-bottom: 10px; text-align: left; }
+        #api-key-input { width: 100%; margin-bottom: 10px; }
+        #save-api-key-btn { width: 100%; padding: 8px; background-color: #4285F4; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
+        #api-key-setup a { font-size: 12px; color: #8ab4f8; }
 
-        @keyframes rotation {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-
-        .shortcuts-container {
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px;
-            width: 100%;
-        }
+        .shortcuts-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; width: 100%; }
         .shortcut { background: rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 15px; transition: transform 0.3s, background 0.3s; font-size: 14px; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; aspect-ratio: 1 / 0.8; border: 1px solid rgba(255, 255, 255, 0.1); }
         .shortcut:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-5px); }
         .shortcut a { text-decoration: none; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
         .shortcut span { font-size: 12px; font-weight: normal; color: #ccc; margin-top: 4px; }
         
-        @media (min-width: 992px) {
-            #dashboard {
-                grid-template-columns: 380px 1fr;
-            }
-        }
+        @media (min-width: 992px) { #dashboard { grid-template-columns: 380px 1fr; } }
     </style>
 </head>
 <body>
@@ -167,9 +70,8 @@
 
         <!-- Dashboard -->
         <div id="dashboard">
-            <!-- Barra lateral de búsqueda -->
             <div id="search-sidebar">
-                <!-- Formulario de Búsqueda de Google -->
+                <!-- Búsqueda de Google -->
                 <form class="search-form" action="https://www.google.com/search" method="get" target="_blank">
                     <h3>Búsqueda de Google</h3>
                     <div class="search-input-wrapper">
@@ -178,7 +80,7 @@
                     </div>
                 </form>
 
-                <!-- Formulario de Chat con Gemini -->
+                <!-- Chat con Gemini -->
                 <form id="gemini-search-form" class="search-form">
                     <h3>Chat con Gemini</h3>
                     <div class="search-input-wrapper">
@@ -186,8 +88,14 @@
                         <input type="text" id="gemini-search-input" class="search-input" placeholder="Preguntar a Gemini..." required>
                     </div>
                 </form>
-                <!-- Área de respuesta de Gemini -->
                 <div id="gemini-response-area"></div>
+                <!-- Gestor de API Key -->
+                <div id="api-key-setup">
+                    <p><b>Se necesita una API Key de Gemini.</b></p>
+                    <input type="password" id="api-key-input" class="search-input" placeholder="Pega tu clave de API aquí">
+                    <button id="save-api-key-btn">Guardar Clave</button>
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank">Obtener una clave de API nueva</a>
+                </div>
             </div>
             
             <!-- Contenedor de Accesos Directos -->
@@ -232,12 +140,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        
-        // ===================================================================
-        // Clave de API de Gemini insertada
-        // ===================================================================
-        const GEMINI_API_KEY = "AlzaSyAYFIGli0PNfeklqW3eQ1xV6Hqz0wbTMnU"; 
-        // ===================================================================
 
         const firebaseConfig = {
           apiKey: "AIzaSyAOyAQokAU7Lu9Qj6geDW2wE3mYFcPEWJA",
@@ -261,12 +163,8 @@
         const userNameEl = document.getElementById('user-name');
         const userPhotoEl = document.getElementById('user-photo');
         
-        googleSignInBtn.onclick = () => {
-            signInWithPopup(auth, provider).catch(err => console.error(err));
-        };
-        signOutBtn.onclick = () => {
-            signOut(auth).catch(err => console.error(err));
-        };
+        googleSignInBtn.onclick = () => { signInWithPopup(auth, provider).catch(err => console.error(err)); };
+        signOutBtn.onclick = () => { signOut(auth).catch(err => console.error(err)); };
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -275,6 +173,7 @@
                 dashboardContainer.style.display = 'grid';
                 userNameEl.textContent = user.displayName;
                 userPhotoEl.src = user.photoURL;
+                checkApiKey(); // Comprueba la API Key al iniciar sesión
             } else {
                 authContainer.style.display = 'flex';
                 userInfoContainer.style.display = 'none';
@@ -286,14 +185,39 @@
         const geminiForm = document.getElementById('gemini-search-form');
         const geminiInput = document.getElementById('gemini-search-input');
         const geminiResponseArea = document.getElementById('gemini-response-area');
+        const apiKeySetup = document.getElementById('api-key-setup');
+        const apiKeyInput = document.getElementById('api-key-input');
+        const saveApiKeyBtn = document.getElementById('save-api-key-btn');
+
+        function checkApiKey() {
+            const storedKey = localStorage.getItem('geminiApiKey');
+            if (!storedKey) {
+                apiKeySetup.style.display = 'block';
+                geminiResponseArea.innerHTML = 'Para chatear con Gemini, primero debes guardar tu clave de API.';
+            } else {
+                apiKeySetup.style.display = 'none';
+                geminiResponseArea.innerHTML = '';
+            }
+        }
+
+        saveApiKeyBtn.addEventListener('click', () => {
+            const key = apiKeyInput.value.trim();
+            if (key) {
+                localStorage.setItem('geminiApiKey', key);
+                apiKeyInput.value = '';
+                checkApiKey();
+                geminiResponseArea.innerHTML = '¡Clave guardada! Ya puedes hacer una pregunta.';
+            }
+        });
 
         geminiForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const query = geminiInput.value.trim();
-            if (!query) return;
+            const geminiApiKey = localStorage.getItem('geminiApiKey');
 
-            if (GEMINI_API_KEY === "TU_API_KEY_DE_GEMINI_AQUI") {
-                geminiResponseArea.innerText = "Error: Por favor, agrega tu clave de API de Gemini en el código.";
+            if (!query) return;
+            if (!geminiApiKey) {
+                checkApiKey();
                 return;
             }
 
@@ -301,48 +225,64 @@
             geminiInput.value = '';
 
             try {
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
-                
-                const requestBody = {
-                    contents: [{
-                        parts: [{
-                            text: query
-                        }]
-                    }]
-                };
-
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`;
+                const requestBody = { contents: [{ parts: [{ text: query }] }] };
                 const response = await fetch(url, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(requestBody)
                 });
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error.message || `Error de red: ${response.statusText}`);
-                }
-
                 const data = await response.json();
+
+                if (!response.ok) {
+                    // Si la respuesta no es OK, lanza un error con el mensaje de la API
+                    throw new Error(data.error.message || `Error de red: ${response.statusText}`);
+                }
                 
                 if (data.candidates && data.candidates.length > 0) {
-                    const textResponse = data.candidates[0].content.parts[0].text;
-                    geminiResponseArea.innerText = textResponse;
+                    geminiResponseArea.innerText = data.candidates[0].content.parts[0].text;
                 } else if (data.promptFeedback) {
-                    // Manejar el caso en que la pregunta sea bloqueada por seguridad
                     geminiResponseArea.innerText = "La pregunta fue bloqueada por razones de seguridad. Intenta con otra pregunta.";
-                }
-                else {
+                } else {
                     geminiResponseArea.innerText = "No se recibió una respuesta válida de Gemini.";
                 }
 
             } catch (error) {
                 console.error('Error al contactar la API de Gemini:', error);
                 geminiResponseArea.innerText = `Ocurrió un error: ${error.message}`;
+
+                // Si el error es de clave inválida, borra la clave y muestra la configuración
+                if (error.message.toLowerCase().includes("api key not valid")) {
+                    localStorage.removeItem('geminiApiKey');
+                    checkApiKey();
+                    geminiResponseArea.innerText = "La clave de API no es válida. Por favor, introduce una nueva.";
+                }
             }
         });
-
     </script>
 </body>
 </html>
+```
+
+---
+
+### **Pasos para Arreglar el Error "API key not valid"**
+
+Este error casi siempre significa que la API que intenta usar la clave no está "encendida" en tu proyecto de Google. Aquí te explico cómo solucionarlo:
+
+1.  **Ve a tu proyecto en la Consola de Google Cloud:**
+    * Usa este enlace directo: [https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com](https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com)
+    * Asegúrate de que en la parte superior de la página esté seleccionado tu proyecto (`mi-pagina-de-inicio`). Si no lo está, haz clic en el nombre del proyecto y selecciónalo de la lista.
+
+2.  **Habilita la API:**
+    * La página te mostrará información sobre la **"Generative Language API"**. Verás un botón azul que dice **"HABILITAR"**.
+    * **Haz clic en ese botón.**
+    * Espera unos segundos a que termine el proceso.
+
+3.  **Vuelve a tu página de inicio:**
+    * Refresca tu página `sadekyamil.github.io`.
+    * Como borraste la clave inválida, te aparecerá el nuevo cuadro para que pegues la clave que generaste.
+    * Pega tu clave de API (`AlzaSyAY...`) y haz clic en "Guardar Clave".
+
+Una vez habilitada la API, la clave que ya tienes será reconocida como válida y el chat debería funcionar perfectamen
