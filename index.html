@@ -225,8 +225,8 @@
             geminiInput.value = '';
 
             try {
-                // CORRECCIÓN: Usar el modelo gemini-1.5-flash-latest
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`;
+                // CORRECCIÓN: Usar el modelo gemini-2.0-flash
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`;
                 const requestBody = { contents: [{ parts: [{ text: query }] }] };
                 const response = await fetch(url, {
                     method: 'POST',
