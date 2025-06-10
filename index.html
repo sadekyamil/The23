@@ -33,13 +33,6 @@
         .loader { width: 20px; height: 20px; border: 3px solid #4a4a4a; border-bottom-color: transparent; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite; }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Estilos para el gestor de API Key */
-        #api-key-setup { display: none; /* Oculto por defecto */ padding: 10px; border: 1px dashed #444; border-radius: 8px; margin-top: 15px; }
-        #api-key-setup p { font-size: 14px; margin-bottom: 10px; text-align: left; }
-        #api-key-input { width: 100%; margin-bottom: 10px; }
-        #save-api-key-btn { width: 100%; padding: 8px; background-color: #4285F4; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; }
-        #api-key-setup a { font-size: 12px; color: #8ab4f8; }
-
         .shortcuts-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; width: 100%; }
         .shortcut { background: rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 15px; transition: transform 0.3s, background 0.3s; font-size: 14px; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; aspect-ratio: 1 / 0.8; border: 1px solid rgba(255, 255, 255, 0.1); }
         .shortcut:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-5px); }
@@ -89,13 +82,6 @@
                     </div>
                 </form>
                 <div id="gemini-response-area"></div>
-                <!-- Gestor de API Key -->
-                <div id="api-key-setup">
-                    <p><b>Se necesita una API Key de Gemini.</b></p>
-                    <input type="password" id="api-key-input" class="search-input" placeholder="Pega tu clave de API aquí">
-                    <button id="save-api-key-btn">Guardar Clave</button>
-                    <a href="https://aistudio.google.com/app/apikey" target="_blank">Obtener una clave de API nueva</a>
-                </div>
             </div>
             
             <!-- Contenedor de Accesos Directos -->
@@ -132,12 +118,6 @@
                 <div class="shortcut"><a href="https://www.google.com/finance/?authuser=0">GOOGLE<br><span>finance</span></a></div>
                 <div class="shortcut"><a href="https://es.finance.yahoo.com/">YAHOO<br><span>finance</span></a></div>
                 <div class="shortcut"><a href="https://www.interactivebrokers.co.uk/sso/Login?RL=1&locale=en_US">IBKR</a></div>
-
-                
-                <div class="shortcut"><a href="https://platform.nexo.com/">nexo</a></div>
-                <div class="shortcut"><a href="https://www.google.com/finance/?authuser=0">GOOGLE<br><span>finance</span></a></div>
-                <div class="shortcut"><a href="https://es.finance.yahoo.com/">YAHOO<br><span>finance</span></a></div>
-                <div class="shortcut"><a href="https://www.interactivebrokers.co.uk/sso/Login?RL=1&locale=en_US">IBKR</a></div>
             </div>
         </div>
     </div>
@@ -146,6 +126,9 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // Clave de API de Gemini integrada directamente en el código.
+        const GEMINI_API_KEY = "AIzaSyAYFlGIi0PNfeklqW3eQ1xV6Hqz0wbTMnU"; 
 
         const firebaseConfig = {
           apiKey: "AIzaSyAOyAQokAU7Lu9Qj6geDW2wE3mYFcPEWJA",
@@ -179,7 +162,6 @@
                 dashboardContainer.style.display = 'grid';
                 userNameEl.textContent = user.displayName;
                 userPhotoEl.src = user.photoURL;
-                checkApiKey(); // Comprueba la API Key al iniciar sesión
             } else {
                 authContainer.style.display = 'flex';
                 userInfoContainer.style.display = 'none';
@@ -191,48 +173,17 @@
         const geminiForm = document.getElementById('gemini-search-form');
         const geminiInput = document.getElementById('gemini-search-input');
         const geminiResponseArea = document.getElementById('gemini-response-area');
-        const apiKeySetup = document.getElementById('api-key-setup');
-        const apiKeyInput = document.getElementById('api-key-input');
-        const saveApiKeyBtn = document.getElementById('save-api-key-btn');
-
-        function checkApiKey() {
-            const storedKey = localStorage.getItem('geminiApiKey');
-            if (!storedKey) {
-                apiKeySetup.style.display = 'block';
-                geminiResponseArea.innerHTML = 'Para chatear con Gemini, primero debes guardar tu clave de API.';
-            } else {
-                apiKeySetup.style.display = 'none';
-                geminiResponseArea.innerHTML = '';
-            }
-        }
-
-        saveApiKeyBtn.addEventListener('click', () => {
-            const key = apiKeyInput.value.trim();
-            if (key) {
-                localStorage.setItem('geminiApiKey', key);
-                apiKeyInput.value = '';
-                checkApiKey();
-                geminiResponseArea.innerHTML = '¡Clave guardada! Ya puedes hacer una pregunta.';
-            }
-        });
 
         geminiForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const query = geminiInput.value.trim();
-            const geminiApiKey = localStorage.getItem('geminiApiKey');
-
             if (!query) return;
-            if (!geminiApiKey) {
-                checkApiKey();
-                return;
-            }
-
+            
             geminiResponseArea.innerHTML = '<div class="loader"></div>';
             geminiInput.value = '';
 
             try {
-                // CORRECCIÓN: Usar el modelo gemini-2.0-flash
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`;
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
                 const requestBody = { contents: [{ parts: [{ text: query }] }] };
                 const response = await fetch(url, {
                     method: 'POST',
@@ -243,7 +194,6 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    // Si la respuesta no es OK, lanza un error con el mensaje de la API
                     throw new Error(data.error.message || `Error de red: ${response.statusText}`);
                 }
                 
@@ -258,13 +208,6 @@
             } catch (error) {
                 console.error('Error al contactar la API de Gemini:', error);
                 geminiResponseArea.innerText = `Ocurrió un error: ${error.message}`;
-
-                // Si el error es de clave inválida, borra la clave y muestra la configuración
-                if (error.message.toLowerCase().includes("api key not valid")) {
-                    localStorage.removeItem('geminiApiKey');
-                    checkApiKey();
-                    geminiResponseArea.innerText = "La clave de API no es válida. Por favor, introduce una nueva.";
-                }
             }
         });
     </script>
