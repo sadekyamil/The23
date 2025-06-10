@@ -16,11 +16,38 @@
         #google-signin-btn { background-color: #4285F4; color: white; border: none; border-radius: 8px; padding: 12px 24px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background-color 0.3s; display: flex; align-items: center; gap: 10px; }
         #google-signin-btn:hover { background-color: #357ae8; }
         #google-signin-btn svg { width: 20px; height: 20px; fill: white; }
-        #user-info { display: none; align-items: center; gap: 15px; margin-bottom: 25px; background: rgba(255, 255, 255, 0.1); padding: 10px 20px; border-radius: 50px; }
-        #user-info img { width: 40px; height: 40px; border-radius: 50%; }
+        
+        /* --- ESTILOS DE INFO DE USUARIO MODIFICADOS --- */
+        #user-info {
+            display: none; /* JS lo cambia a 'flex' */
+            align-items: center;
+            justify-content: space-between; /* Empuja el botón 'Salir' a la derecha */
+            width: 100%;
+        }
+        .user-details {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        #user-info img {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+        }
         #user-name { font-weight: bold; }
-        #signout-btn { background: #db4437; color: white; border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer; transition: background-color 0.3s; font-weight: bold; }
-        #signout-btn:hover { background: #c23327; }
+        #signout-btn {
+            background: rgba(219, 68, 55, 0.8);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+        #signout-btn:hover { background: #db4437; }
+        
         #dashboard { display: none; width: 100%; display: grid; grid-template-columns: 1fr; gap: 20px; align-items: start; }
         #search-sidebar { padding: 20px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.1); display: flex; flex-direction: column; gap: 25px; }
         .search-form h3 { margin-bottom: 15px; font-size: 18px; color: #eee; text-align: left; }
@@ -54,16 +81,18 @@
             </button>
         </div>
 
-        <!-- Información del Usuario -->
-        <div id="user-info">
-            <img id="user-photo" src="" alt="Foto de perfil">
-            <span id="user-name"></span>
-            <button id="signout-btn">Salir</button>
-        </div>
-
         <!-- Dashboard -->
         <div id="dashboard">
             <div id="search-sidebar">
+                <!-- Información del Usuario (MOVIDO Y MODIFICADO) -->
+                <div id="user-info">
+                    <div class="user-details">
+                        <img id="user-photo" src="" alt="Foto de perfil">
+                        <span id="user-name"></span>
+                    </div>
+                    <button id="signout-btn">Salir</button>
+                </div>
+
                 <!-- Búsqueda de Google -->
                 <form class="search-form" action="https://www.google.com/search" method="get" target="_blank">
                     <h3>Búsqueda de Google</h3>
@@ -158,7 +187,7 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 authContainer.style.display = 'none';
-                userInfoContainer.style.display = 'flex';
+                userInfoContainer.style.display = 'flex'; // MODIFICADO: Solo se muestra el contenedor principal
                 dashboardContainer.style.display = 'grid';
                 userNameEl.textContent = user.displayName;
                 userPhotoEl.src = user.photoURL;
