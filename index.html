@@ -100,7 +100,7 @@
                     <h3>Búsqueda de Google</h3>
                     <div class="search-input-wrapper">
                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"></path></svg>
-                        <input type="text" name="q" class="search-input" placeholder="Buscar en Google..." required>
+                        <input type="text" name="q" id="google-search-input" class="search-input" placeholder="Buscar en Google..." required>
                     </div>
                 </form>
                 <form id="gemini-search-form" class="search-form">
@@ -123,6 +123,7 @@
                 <div class="shortcut"><a href="https://docs.google.com/presentation/u/0/">GOOGLE<br><span>diapositivas</span></a></div>
                 <div class="shortcut"><a href="https://us-east-2.console.aws.amazon.com/lambda/home?region=us-east-2#/discover">Lambda</a></div>
                 <div class="shortcut"><a href="https://us-east-2.console.aws.amazon.com/dynamodbv2/home?region=us-east-2#dashboard">DynamoDB</a></div>
+                <div class="shortcut"><a href="https://html.onlineviewer.net/">HTML Viewer</a></div>
                 <div class="shortcut"><a href="https://github.com/sadekyamil?tab=repositories">GITHUB<br><span>/sadekyamil</span></a></div>
                 <div class="shortcut"><a href="https://idx.google.com/pythonpy-86921935">FIREBASE-STUDIO<br><span>(mi-1er-python)</span></a></div>
                 <div class="shortcut"><a href="https://idx.google.com/">IDX Google</a></div>
@@ -132,9 +133,10 @@
                 <div class="shortcut"><a href="https://github.dev/sadekyamil/sadekyamil.github.io">EDITAR<br><span>pagina-inicio</span></a></div>
                 <div class="shortcut"><a href="https://github.com/sadekyamil/clase-innovacion">REPOSITORIO<br><span>innovacion</span></a></div>
                 <div class="shortcut"><a href="https://dash.cloudflare.com/c1858a93e7246c885d0a6d4f73f2b7a3/workers-and-pages?type=pages&sortBy=name">CLOUDFLARE<br><span>pages</span></a></div>
-                <div class="shortcut"><a href="https://github.com/sadekyamil/sadekyamil.github.io/edit/main/index.html">EDITAR<br><span>sadekyamil.io</span></a></div>
+                <div class="shortcut"><a href="https://github.com/sdekyamil/sadekyamil.github.io/edit/main/index.html">EDITAR<br><span>sadekyamil.io</span></a></div>
                 <div class="shortcut"><a href="https://imgto.xyz/">imgto.xyz</a></div>
                 <div class="shortcut"><a href="https://www.photopea.com/">Photopea</a></div>
+                <div class="shortcut"><a href="https://sadeknifuri.github.io/temporizador.html">Temporizador</a></div>
                 <div class="shortcut"><a href="https://chromewebstore.google.com/detail/adguard-adblocker/bgnkhhnnamicmpeenaelnjfhikgbkllg?hl=en-US&utm_source=ext_sidebar">AdGuard</a></div>
                 <div class="shortcut"><a href="https://experienciavivo.duoc.cl/alumnos" >vivoDUOC</a></div>
                 <div class="shortcut"><a href="https://es.finance.yahoo.com/">mercado pago</a></div>
@@ -176,6 +178,7 @@
         const signOutBtn = document.getElementById('signout-btn');
         const userNameEl = document.getElementById('user-name');
         const userPhotoEl = document.getElementById('user-photo');
+        const googleSearchInput = document.getElementById('google-search-input');
         
         googleSignInBtn.onclick = () => { signInWithPopup(auth, provider).catch(err => console.error(err)); };
         signOutBtn.onclick = () => { signOut(auth).catch(err => console.error(err)); };
@@ -189,11 +192,16 @@
                 dashboardContainer.style.display = 'grid';
                 userNameEl.textContent = user.displayName;
                 userPhotoEl.src = user.photoURL;
+
+                // AÑADIDO: Enfocar la barra de búsqueda de Google
+                setTimeout(() => {
+                    googleSearchInput.focus();
+                }, 100); // Pequeño retardo para asegurar que el elemento es visible
+
             } else {
                 authContainer.style.display = 'flex';
                 dashboardContainer.style.display = 'none';
             }
-            // Nos desuscribimos después de la primera verificación para evitar múltiples ejecuciones
             authUnsubscribe();
         });
 
