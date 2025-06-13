@@ -60,10 +60,48 @@
         #gemini-response-area { margin-top: 10px; text-align: left; background-color: rgba(0, 0, 0, 0.2); border-radius: 8px; padding: 15px; min-height: 50px; font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; }
         
         .shortcuts-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; width: 100%; }
-        .shortcut { background: rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 15px; transition: transform 0.3s, background 0.3s; font-size: 14px; font-weight: bold; display: flex; flex-direction: column; align-items: center; justify-content: center; aspect-ratio: 1 / 0.8; border: 1px solid rgba(255, 255, 255, 0.1); }
+        
+        /* ESTILOS MODIFICADOS Y AÑADIDOS PARA MICRO-BOTONES */
+        .shortcut {
+            background: rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 15px;
+            transition: transform 0.3s, background 0.3s;
+            display: flex; flex-direction: column;
+            justify-content: center; /* Centrado por defecto */
+            align-items: center;
+            aspect-ratio: 1 / 0.8; border: 1px solid rgba(255, 255, 255, 0.1);
+        }
         .shortcut:hover { background: rgba(255, 255, 255, 0.15); transform: translateY(-5px); }
+
         .shortcut a { text-decoration: none; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
         .shortcut span { font-size: 12px; font-weight: normal; color: #ccc; margin-top: 4px; }
+        
+        /* Contenedor especial para los shortcuts de GitHub */
+        .shortcut.has-micro-buttons {
+            justify-content: space-between; /* Espacia el título y los botones */
+            align-items: center; /* Centra el contenido horizontalmente */
+        }
+        
+        .shortcut-main-content { font-size: 14px; font-weight: bold; text-align: center; }
+        
+        .micro-buttons-container {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            justify-content: center;
+        }
+        .micro-button {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            padding: 5px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            color: white;
+            text-decoration: none;
+        }
+        .micro-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
         
         @media (min-width: 992px) { #dashboard { grid-template-columns: 380px 1fr; } }
     </style>
@@ -116,22 +154,45 @@
             <div class="shortcuts-container" id="shortcuts">
                 <div class="shortcut"><a href="https://gemini.google.com/u/0/app">GOOGLE<br><span>Gemini</span></a></div>
                 <div class="shortcut"><a href="https://aistudio.google.com/library">GOOGLE<br><span>AIstudio</span></a></div>
-                <div class="shortcut"><a href="https://youtube.com" >GOOGLE<br><span>YouTube</span></a></div>
+                <div class="shortcut"><a href="https://youtube.com">GOOGLE<br><span>YouTube</span></a></div>
                 <div class="shortcut"><a href="https://drive.google.com/drive/recent">GOOGLE<br><span>Drive</span></a></div>
                 <div class="shortcut"><a href="https://keep.google.com/">GOOGLE<br><span>Keep</span></a></div>
                 <div class="shortcut"><a href="https://mail.google.com/mail/u/0/#inbox">GOOGLE<br><span>Gmail</span></a></div>
                 <div class="shortcut"><a href="https://us-east-2.console.aws.amazon.com/apigateway/main/apis?region=us-east-2">AMAZON<br><span>API Gateway</span></a></div>
                 <div class="shortcut"><a href="https://us-east-2.console.aws.amazon.com/lambda/home?region=us-east-2#/discover">AMAZON<br><span>Lambda</span></a></div>
                 <div class="shortcut"><a href="https://us-east-2.console.aws.amazon.com/dynamodbv2/home?region=us-east-2#dashboard">AMAZON<br><span>DinamoDB</span></a></div>
-                <div class="shortcut"><a href="https://github.com/sadekyamil?tab=repositories">GITHUB<br><span>/sadekyamil</span></a></div>
+                
+                <!-- ACCESOS DIRECTOS DE GITHUB CON MICRO-BOTONES -->
+                <div class="shortcut has-micro-buttons">
+                    <div class="shortcut-main-content">GITHUB<br><span>/sadekyamil</span></div>
+                    <div class="micro-buttons-container">
+                        <a href="https://github.com/sadekyamil?tab=repositories" target="_blank" class="micro-button">Ver Repos</a>
+                    </div>
+                </div>
+                 <div class="shortcut has-micro-buttons">
+                    <div class="shortcut-main-content">Página Inicio<br><span>(sadekyamil.io)</span></div>
+                    <div class="micro-buttons-container">
+                        <a href="https://github.com/sadekyamil/sadekyamil.github.io" target="_blank" class="micro-button">Repo</a>
+                        <a href="https://github.dev/sadekyamil/sadekyamil.github.io" target="_blank" class="micro-button">Editar</a>
+                    </div>
+                </div>
+                 <div class="shortcut has-micro-buttons">
+                    <div class="shortcut-main-content">BigoteMan<br><span>(Landing Page)</span></div>
+                    <div class="micro-buttons-container">
+                        <a href="https://github.com/sadeknifuri/ladingpage" target="_blank" class="micro-button">Repo</a>
+                        <a href="https://github.dev/sadeknifuri/ladingpage" target="_blank" class="micro-button">Editar</a>
+                        <a href="https://ladingpage-6mq.pages.dev/" target="_blank" class="micro-button">Ver</a>
+                    </div>
+                </div>
+                 <div class="shortcut has-micro-buttons">
+                    <div class="shortcut-main-content">Innovación<br><span>(Repo Clase)</span></div>
+                    <div class="micro-buttons-container">
+                        <a href="https://github.com/sadekyamil/clase-innovacion" target="_blank" class="micro-button">Repo</a>
+                    </div>
+                </div>
+
                 <div class="shortcut"><a href="https://idx.google.com/pythonpy-86921935">FIREBASE-STUDIO<br><span>(mi-1er-python)</span></a></div>
-                <div class="shortcut"><a href="https://github.com/sadeknifuri/ladingpage">REPOSITORIO<br><span>BigoteMan</span></a></div>
-                <div class="shortcut"><a href="https://github.dev/sadeknifuri/ladingpage">EDITAR<br><span>BigoteMan</span></a></div>
-                <div class="shortcut"><a href="https://ladingpage-6mq.pages.dev/">Deploy<br><span>BigoteMan</span></a></div>
-                <div class="shortcut"><a href="https://github.dev/sadekyamil/sadekyamil.github.io">EDITAR<br><span>pagina-inicio</span></a></div>
-                <div class="shortcut"><a href="https://github.com/sadekyamil/clase-innovacion">REPOSITORIO<br><span>innovacion</span></a></div>
                 <div class="shortcut"><a href="https://dash.cloudflare.com/c1858a93e7246c885d0a6d4f73f2b7a3/workers-and-pages?type=pages&sortBy=name">CLOUDFLARE<br><span>pages</span></a></div>
-                <div class="shortcut"><a href="https://github.dev/sadekyamil/sadekyamil.github.io">EDITAR<br><span>sadekyamil.io</span></a></div>
                 <div class="shortcut"><a href="https://imgto.xyz/">imgto.xyz</a></div>
                 <div class="shortcut"><a href="https://www.photopea.com/">Photopea</a></div>
                 <div class="shortcut"><a href="https://chromewebstore.google.com/detail/adguard-adblocker/bgnkhhnnamicmpeenaelnjfhikgbkllg?hl=en-US&utm_source=ext_sidebar">AdGuard</a></div>
@@ -186,10 +247,9 @@
                 userNameEl.textContent = user.displayName;
                 userPhotoEl.src = user.photoURL;
 
-                // AÑADIDO: Enfocar la barra de búsqueda de Google
                 setTimeout(() => {
                     googleSearchInput.focus();
-                }, 100); // Pequeño retardo para asegurar que el elemento es visible
+                }, 100); 
 
             } else {
                 authContainer.style.display = 'flex';
