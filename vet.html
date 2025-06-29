@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melanoma Ocular Canino: Guía Interactiva</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutral (Slate, White, Sky Blue Accent) -->
+    <!-- Application Structure Plan: A tab-based single-page application with four main sections (Overview, Types by Location, Risk/Prognosis, Signs/Diagnosis). This structure breaks down complex medical information into manageable, focused topics, improving usability over a linear document. The centerpiece is an interactive eye diagram in the 'Types' section, allowing users to spatially explore tumor locations, which is more intuitive for anatomical information. This user-flow guides the user from general knowledge to specific details and risks, facilitating better understanding. -->
+    <!-- Visualization & Content Choices: 1. Malignancy Comparison: Report data on malignancy rates per location -> Goal: Compare risk -> Viz: Horizontal Bar Chart (Chart.js) -> Interaction: Hover tooltips -> Justification: Best for comparing values across discrete categories. 2. Uveal Split: >80% benign rate -> Goal: Show proportion -> Viz: Donut Chart (Chart.js) -> Interaction: Hover tooltips -> Justification: Ideal for part-to-whole data. 3. Anatomical Locations: Report sections on Iris, Limbus, etc. -> Goal: Organize spatially -> Viz: Interactive Diagram (HTML/CSS divs) -> Interaction: Click to show details -> Justification: Creates an engaging, intuitive exploration of anatomical content. 4. Signs/Diagnosis: Text descriptions -> Goal: Inform clearly -> Viz: Styled Lists with Unicode icons -> Interaction: None -> Justification: Highly readable and scannable format for actionable information. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active, .nav-link:hover {
+            border-bottom-color: #0284c7;
+            color: #0c4a6e;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .eye-diagram-container {
+            width: 300px;
+            height: 300px;
+            position: relative;
+        }
+        .eye-part {
+            position: absolute;
+            border: 2px solid #94a3b8;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: #475569;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        .eye-part:hover, .eye-part.selected {
+            border-color: #0ea5e9;
+            background-color: #e0f2fe;
+            transform: scale(1.05);
+            z-index: 10;
+        }
+        .eye-sclera { top: 0; left: 0; width: 100%; height: 100%; }
+        .eye-limbus { top: 12.5%; left: 12.5%; width: 75%; height: 75%; border-style: dashed; }
+        .eye-iris { top: 25%; left: 25%; width: 50%; height: 50%; background-color: rgba(100, 116, 139, 0.2); }
+        .eye-pupil { top: 37.5%; left: 37.5%; width: 25%; height: 25%; background-color: #1e293b; border-color: #1e293b; cursor: default;}
+        .eye-pupil:hover { background-color: #1e293b; transform: scale(1); }
+        .eye-conjunctiva { top: -5%; left: 60%; width: 50%; height: 50%; border-radius: 40% 60% 50% 50% / 50% 50% 60% 40%; transform: rotate(-15deg); background-color: rgba(251, 146, 60, 0.1); }
+        .eye-eyelid { top: -15%; left: -10%; width: 120%; height: 50%; border-radius: 100% 100% 20% 20% / 200% 200% 20% 20%; background-color: rgba(203, 213, 225, 0.2); border-style: solid; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-sm shadow-sm sticky top-0 z-20">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-slate-800">Melanoma Ocular Canino</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#resumen" class="nav-link px-3 py-2 rounded-md text-sm font-semibold active">Resumen</a>
+                        <a href="#tipos" class="nav-link px-3 py-2 rounded-md text-sm font-semibold">Tipos por Ubicación</a>
+                        <a href="#riesgo" class="nav-link px-3 py-2 rounded-md text-sm font-semibold">Riesgo y Pronóstico</a>
+                        <a href="#diagnostico" class="nav-link px-3 py-2 rounded-md text-sm font-semibold">Signos y Diagnóstico</a>
+                    </div>
+                </div>
+                 <div class="md:hidden">
+                    <select id="mobile-nav" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                        <option value="resumen">Resumen</option>
+                        <option value="tipos">Tipos por Ubicación</option>
+                        <option value="riesgo">Riesgo y Pronóstico</option>
+                        <option value="diagnostico">Signos y Diagnóstico</option>
+                    </select>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+        
+        <section id="resumen" class="content-section active">
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <h2 class="text-3xl font-bold text-slate-800 mb-4">Guía Interactiva del Melanoma Ocular en Perros</h2>
+                <p class="text-lg text-slate-600 mb-6">
+                    Los melanomas son tumores que se originan en los melanocitos, las células que producen pigmento. Aunque comunes en la piel, también pueden desarrollarse dentro o sobre la superficie del ojo de un perro, siendo de hecho la neoplasia ocular primaria más común en esta especie. Esta guía interactiva está diseñada para ayudar a veterinarios, estudiantes y propietarios a comprender sus ubicaciones, riesgos y signos clínicos.
+                </p>
+                <div class="grid md:grid-cols-3 gap-6 text-center">
+                    <div class="bg-sky-50 p-6 rounded-lg">
+                        <div class="text-4xl font-bold text-sky-700">>80%</div>
+                        <p class="mt-2 font-semibold text-sky-800">de los tumores intraoculares (uveales) son benignos.</p>
+                    </div>
+                    <div class="bg-amber-50 p-6 rounded-lg">
+                        <div class="text-4xl font-bold text-amber-700">Invasión Local</div>
+                        <p class="mt-2 font-semibold text-amber-800">Incluso los tumores benignos pueden dañar el ojo y causar ceguera.</p>
+                    </div>
+                    <div class="bg-teal-50 p-6 rounded-lg">
+                        <div class="text-4xl font-bold text-teal-700"><5%</div>
+                        <p class="mt-2 font-semibold text-teal-800">es la tasa de metástasis para la mayoría de melanomas oculares primarios.</p>
+                    </div>
+                </div>
+                <p class="mt-6 text-slate-500 text-sm">Navegue por las secciones utilizando el menú superior para explorar en detalle los diferentes aspectos de esta condición.</p>
+            </div>
+        </section>
+
+        <section id="tipos" class="content-section">
+             <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Exploración Anatómica Interactiva</h2>
+                <p class="text-slate-600 mb-8">Haga clic en las diferentes partes del diagrama para aprender sobre los melanomas que se originan en cada ubicación. El ojo que se muestra es una representación simplificada para fines ilustrativos.</p>
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="flex justify-center items-center">
+                        <div class="eye-diagram-container">
+                            <div id="diagram-eyelid" data-location="eyelid" class="eye-part eye-eyelid"><span class="transform -translate-y-4">Párpado</span></div>
+                            <div id="diagram-conjunctiva" data-location="conjunctiva" class="eye-part eye-conjunctiva"><span class="transform translate-x-3">Conjuntiva</span></div>
+                            <div class="eye-part eye-sclera">
+                                <div id="diagram-limbus" data-location="limbus" class="eye-part eye-limbus"><span class="transform translate-y-8">Limbus</span></div>
+                                <div id="diagram-iris" data-location="iris" class="eye-part eye-iris"><span class="">Iris/C. Ciliar</span></div>
+                                <div class="eye-part eye-pupil"></div>
+                                <div id="diagram-choroid" data-location="choroid" class="absolute top-[5%] left-[5%] w-[90%] h-[90%] rounded-full z-[-1]"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="location-info" class="bg-slate-50 p-6 rounded-lg min-h-[300px] transition-all duration-300">
+                        <h3 id="info-title" class="text-2xl font-bold text-sky-800 mb-3">Seleccione una ubicación</h3>
+                        <p id="info-text" class="text-slate-700">Haga clic en una parte del ojo para ver la descripción aquí.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="riesgo" class="content-section">
+             <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Análisis de Riesgo y Pronóstico</h2>
+                <p class="text-slate-600 mb-8">La ubicación anatómica de un melanoma es un predictor clave de su comportamiento. Esta sección visualiza las diferencias en malignidad y aclara el concepto de "invasión local".</p>
+                <div class="grid lg:grid-cols-2 gap-12 items-start">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-700 mb-4 text-center">Probabilidad de Malignidad por Ubicación</h3>
+                        <div class="chart-container">
+                            <canvas id="malignancyChart"></canvas>
+                        </div>
+                        <p class="text-sm text-slate-500 mt-4 text-center">Esta gráfica muestra que aunque la mayoría de los melanomas uveales (iris, cuerpo ciliar) y limbares son benignos, los conjuntivales son predominantemente malignos.</p>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-700 mb-4 text-center">Desglose de Melanomas Uveales</h3>
+                         <div class="chart-container">
+                            <canvas id="uvealPieChart"></canvas>
+                        </div>
+                        <p class="text-sm text-slate-500 mt-4 text-center">Más del 80% de los melanomas dentro del ojo son benignos, lo que significa que tienen un bajo riesgo de extenderse a otros órganos.</p>
+                    </div>
+                </div>
+                <div class="mt-12 bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg">
+                    <h3 class="text-xl font-bold text-amber-800">El Peligro Oculto: Invasión Local vs. Metástasis</h3>
+                    <p class="text-amber-900 mt-2">Un tumor "benigno" en el ojo no es inofensivo. Esta designación significa que es improbable que haga metástasis (se extienda a órganos distantes como los pulmones). Sin embargo, su **invasión local** es el verdadero riesgo. El tumor puede crecer e infiltrar estructuras oculares vitales, causando inflamación crónica (uveítis), un aumento doloroso de la presión (glaucoma secundario) y, en última instancia, ceguera. La intervención temprana es crucial para preservar la visión y el confort del ojo, incluso si el riesgo de diseminación sistémica es bajo.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="diagnostico" class="content-section">
+             <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Signos Clínicos y Proceso Diagnóstico</h2>
+                 <p class="text-slate-600 mb-8">Reconocer los signos tempranos y comprender el enfoque diagnóstico es fundamental para un manejo exitoso. La apariencia clínica por sí sola no es suficiente para determinar la naturaleza del tumor.</p>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-700 mb-4">Signos de Alerta a Observar</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start"><span class="text-sky-500 text-xl mr-3">👁️</span> <div><span class="font-semibold">Cambio de Apariencia:</span> Nueva mancha, cambio de color del iris, masa visible.</div></li>
+                            <li class="flex items-start"><span class="text-sky-500 text-xl mr-3">💧</span> <div><span class="font-semibold">Molestia Ocular:</span> Lagrimeo excesivo, frotarse el ojo, enrojecimiento.</div></li>
+                            <li class="flex items-start"><span class="text-sky-500 text-xl mr-3">📐</span> <div><span class="font-semibold">Forma Anormal de la Pupila (Discoria):</span> La pupila ya no es redonda o reacciona de forma extraña.</div></li>
+                            <li class="flex items-start"><span class="text-sky-500 text-xl mr-3">🩸</span> <div><span class="font-semibold">Sangre en el Ojo (Hipema):</span> Presencia de sangre en la cámara anterior.</div></li>
+                            <li class="flex items-start"><span class="text-sky-500 text-xl mr-3">☁️</span> <div><span class="font-semibold">Ojo "Nublado":</span> Puede indicar inflamación (uveítis) o aumento de presión (glaucoma).</div></li>
+                            <li class="flex items-start"><span class="text-sky-500 text-xl mr-3">🐶</span> <div><span class="font-semibold">Predisposición Racial:</span> Mayor vigilancia en Golden/Labrador Retrievers y Pastores Alemanes.</div></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-700 mb-4">El Camino hacia el Diagnóstico</h3>
+                        <ol class="space-y-4">
+                           <li class="flex items-start">
+                                <div class="flex-shrink-0 bg-sky-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4">1</div>
+                                <div><span class="font-semibold">Examen Oftalmológico:</span> Un veterinario, idealmente un oftalmólogo, realiza un examen completo del ojo.</div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="flex-shrink-0 bg-sky-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4">2</div>
+                                <div><span class="font-semibold">Ecografía Ocular:</span> Esencial para ver tumores internos, medir su tamaño y diferenciarlos de quistes.</div>
+                            </li>
+                             <li class="flex items-start">
+                                <div class="flex-shrink-0 bg-sky-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4">3</div>
+                                <div><span class="font-semibold">Estadificación (si se sospecha malignidad):</span> Búsqueda de metástasis en el cuerpo (radiografías de tórax, ecografía abdominal).</div>
+                            </li>
+                             <li class="flex items-start">
+                                <div class="flex-shrink-0 bg-sky-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4">4</div>
+                                <div><span class="font-semibold">Histopatología (Estándar de Oro):</span> Tras la extirpación, un patólogo analiza el tejido para un diagnóstico definitivo (benigno vs. maligno).</div>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="text-center text-sm text-slate-400 py-6">
+        <p>Aplicación generada a partir del informe "Melanomas Oculares en Perros".</p>
+        <p>Esta herramienta es para fines educativos y no reemplaza la consulta veterinaria profesional.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const locationData = {
+                iris: {
+                    title: "Melanoma de Iris y Cuerpo Ciliar",
+                    text: "Son los tumores intraoculares más comunes. Se originan en el iris (la parte de color) o el cuerpo ciliar (detrás del iris). Se presentan como masas pigmentadas que pueden distorsionar la pupila. Afortunadamente, la gran mayoría (>80%) son benignos, pero su crecimiento local puede causar glaucoma y pérdida de visión."
+                },
+                limbus: {
+                    title: "Melanoma Limbar (Epibulbar)",
+                    text: "Aparece en el limbus, la unión entre la córnea transparente y la esclera blanca. Son crecimientos superficiales, redondeados, pigmentados y fácilmente visibles. Son casi siempre benignos y de crecimiento muy lento. La detección temprana es común debido a su visibilidad."
+                },
+                choroid: {
+                    title: "Melanoma de Coroides",
+                    text: "Se origina en la coroides, la capa vascular detrás de la retina. Son invisibles en un examen externo, lo que dificulta su detección temprana. A menudo se diagnostican solo cuando causan complicaciones secundarias como el desprendimiento de retina o glaucoma. Aunque son menos comunes, su ubicación oculta representa un desafío."
+                },
+                conjunctiva: {
+                    title: "Melanoma Conjuntival",
+                    text: "Se forma en la conjuntiva, la membrana mucosa que recubre el interior de los párpados y la parte frontal del ojo. Aparecen como masas rosadas o pigmentadas. A diferencia de otros melanomas oculares, los de la conjuntiva son predominantemente malignos y tienen un mayor riesgo de metástasis."
+                },
+                eyelid: {
+                    title: "Melanoma Palpebral",
+                    text: "Afecta los párpados, a menudo apareciendo como una masa de color variable en el borde del párpado. Estos tumores son predominantemente benignos en los perros. Sin embargo, pueden causar irritación o interferir con el parpadeo normal si crecen demasiado."
+                }
+            };
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const mobileNav = document.getElementById('mobile-nav');
+            const sections = document.querySelectorAll('.content-section');
+            const eyeParts = document.querySelectorAll('.eye-part');
+            const infoTitle = document.getElementById('info-title');
+            const infoText = document.getElementById('info-text');
+
+            function switchTab(targetId) {
+                sections.forEach(section => {
+                    section.classList.toggle('active', section.id === targetId);
+                });
+                navLinks.forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('href') === `#${targetId}`);
+                });
+                if (mobileNav.value !== targetId) {
+                    mobileNav.value = targetId;
+                }
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = e.target.getAttribute('href').substring(1);
+                    switchTab(targetId);
+                });
+            });
+
+            mobileNav.addEventListener('change', (e) => {
+                switchTab(e.target.value);
+            });
+
+            eyeParts.forEach(part => {
+                part.addEventListener('click', () => {
+                    const location = part.dataset.location;
+                    if (location && locationData[location]) {
+                        eyeParts.forEach(p => p.classList.remove('selected'));
+                        part.classList.add('selected');
+
+                        infoTitle.textContent = locationData[location].title;
+                        infoText.textContent = locationData[location].text;
+                    }
+                });
+            });
+            
+            document.getElementById('diagram-iris').click();
+
+            const malignancyCtx = document.getElementById('malignancyChart')?.getContext('2d');
+            if (malignancyCtx) {
+                new Chart(malignancyCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Conjuntiva', 'Párpado', 'Limbus', 'Uveal (Intraocular)'],
+                        datasets: [{
+                            label: 'Prob. de Malignidad',
+                            data: [80, 15, 5, 20],
+                            backgroundColor: [
+                                'rgba(239, 68, 68, 0.6)',
+                                'rgba(251, 191, 36, 0.6)',
+                                'rgba(59, 130, 246, 0.6)',
+                                'rgba(16, 185, 129, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgba(239, 68, 68, 1)',
+                                'rgba(251, 191, 36, 1)',
+                                'rgba(59, 130, 246, 1)',
+                                'rgba(16, 185, 129, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%'
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return ` ${context.dataset.label}: ${context.raw}%`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            const uvealCtx = document.getElementById('uvealPieChart')?.getContext('2d');
+            if (uvealCtx) {
+                new Chart(uvealCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Benigno', 'Maligno'],
+                        datasets: [{
+                            label: 'Comportamiento Uveal',
+                            data: [80, 20],
+                            backgroundColor: [
+                                'rgba(16, 185, 129, 0.7)',
+                                'rgba(239, 68, 68, 0.7)',
+                            ],
+                            borderColor: [
+                                'rgba(16, 185, 129, 1)',
+                                'rgba(239, 68, 68, 1)',
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return ` ${context.label}: ${context.raw}%`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
