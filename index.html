@@ -21,14 +21,10 @@
         }
         body {
             width: 100vw; 
-            min-height: 100vh; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
+            height: 100vh; /* Asegura que el cuerpo ocupe toda la altura */
             background: linear-gradient(135deg, #0e0e0e, #000000);
             font-family: 'Inter', Arial, sans-serif; 
             color: white; 
-            padding: 20px;
         }
         
         /* Lógica de carga */
@@ -62,48 +58,47 @@
         /* Contenido principal */
         .main-content {
             display: none; /* Se hace visible con JS después de la carga */
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
             width: 100%; 
-            max-width: 1200px; /* Ancho máximo ajustado */
-            text-align: center; 
+            height: 100%;
         }
         
         /* Contenedor de los cuadrados */
         .shortcuts-container { 
             display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
-            gap: 20px; /* Espaciado aumentado */
+            /* Se define una cuadrícula de 6 columnas y 4 filas para llenar la pantalla */
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 10px; /* Espaciado reducido */
             width: 100%; 
+            height: 100%;
+            padding: 10px; /* Un pequeño padding alrededor de la cuadrícula */
         }
 
         /* Estilo de cada cuadrado (shortcut) */
         .shortcut {
             background: rgba(255, 255, 255, 0.08); 
-            border-radius: 12px; /* Bordes más redondeados */
+            border-radius: 12px;
             padding: 15px;
             transition: transform 0.3s, background 0.3s;
             display: flex; 
             flex-direction: column;
             justify-content: center; 
             align-items: center;
-            aspect-ratio: 1 / 1; /* Proporción cuadrada */
             border: 1px solid rgba(255, 255, 255, 0.1);
             text-decoration: none;
             color: white;
             cursor: pointer;
+            text-align: center; /* Centra el texto */
         }
         .shortcut:hover { 
             background: rgba(255, 255, 255, 0.15); 
-            transform: translateY(-5px); 
+            transform: scale(1.03); /* Efecto de zoom en lugar de mover */
         }
 
         /* Contenido dentro del cuadrado */
         .shortcut-main-content {
             font-size: 14px;
             font-weight: bold;
-            text-align: center;
         }
         .shortcut span { 
             font-size: 12px; 
@@ -123,7 +118,7 @@
     <!-- Contenido principal que se muestra después de cargar -->
     <div class="main-content">
         <div class="shortcuts-container" id="shortcuts">
-            <!-- Cada div es un cuadrado que funciona como un enlace -->
+            <!-- Cada a es un cuadrado que funciona como un enlace -->
             <a href="https://gemini.google.com/u/0/app" target="_blank" class="shortcut">
                 <div class="shortcut-main-content">GOOGLE<br><span>Gemini</span></div>
             </a>
@@ -149,10 +144,10 @@
                 <div class="shortcut-main-content">GITHUB<br><span>the23.pages.dev</span></div>
             </a>
             <a href="https://github.com/the23s/practicando-ando" target="_blank" class="shortcut">
-                <div class="shortcut-main-content">GITHUB<br><span>:) practicando :)</span></div>
+                <div class="shortcut-main-content">GITHUB<br><span> practicando</span></div>
             </a>
             <a href="https://github.com/sadekyamil/landing-page---bigoteman" target="_blank" class="shortcut">
-                <div class="shortcut-main-content">GITHUB<br><span>:) P.Venta :)</span></div>
+                <div class="shortcut-main-content">GITHUB<br><span> P.Venta </span></div>
             </a>
             <a href="https://github.com/sadeknifuri/ladingpage" target="_blank" class="shortcut">
                  <div class="shortcut-main-content">GITHUB<br><span>fakeBigote</span></div>
@@ -209,7 +204,7 @@
             // Oculta el loader
             loaderContainer.style.display = 'none';
             // Muestra el contenido principal
-            mainContent.style.display = 'flex';
+            mainContent.style.display = 'block'; /* Cambiado a block */
         });
     </script>
 </body>
